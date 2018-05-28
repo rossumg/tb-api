@@ -39,7 +39,7 @@ def authorize():
     )
 
 
-@bp.route('/token', methods=['POST'])
+@bp.route('/token', methods=['POST', 'GET'])
 def issue_token():
     return authorization.create_token_response()
 

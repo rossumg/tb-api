@@ -12,11 +12,11 @@ def create_app(config=None):
 
     app.config.update(dict(
         Debug=True,
-        SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://tbapi:tbapi@tbapp-db:3306/tbapi',
+        SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://tbapi:tbapi@127.0.0.1:3307/tbapi',
         SQLALCHEMY_TRACK_MODIFICATIONS = False,
         SQLALCHEMY_POOL_RECYCLE = 60,
         SQLALCHEMY_BINDS = {
-            'mpower':        'mysql+pymysql://mpower:mpower@mpower-db:3306/mpower_demo',
+            'mpower':        'mysql+pymysql://mpower_db_user:4kaipgzEFaVXo5qgUZ7H5UM6p3x2wUdA@127.0.0.1:3306/mpower_demo',
         }
     ))
 

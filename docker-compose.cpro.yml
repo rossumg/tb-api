@@ -2,7 +2,8 @@ version: '3.3'
 services:
   cpro:
     build:
-      context: https://fake-username:${REPO_ACCESS_TOKEN}@gitlab.cirg.washington.edu/svn/dhair2.git#feature/tb_mpower-styling
+      context: /srv/www/docker/dhair2
+      #      context: https://fake-username:${REPO_ACCESS_TOKEN}@gitlab.cirg.washington.edu/svn/dhair2.git#feature/tb_mpower-styling
       dockerfile: docker/Dockerfile
     ports:
       - target: 80

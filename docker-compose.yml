@@ -16,7 +16,7 @@ services:
       NODE_ENV: development
       REACT_APP_API_PATH: https://tb-api.cirg.washington.edu
       REACT_APP_REDIRECT_PATH: https://tb-mobile.cirg.washington.edu/redirect
-      REACT_APP_CHECKIN_PATH: https://mpower-dev.cirg.washington.edu/mpower_tb-ivanc/surveys/new_session?project=daily_check_in
+      REACT_APP_CHECKIN_PATH: https://mpower-api.cirg.washington.edu/surveys  
       REACT_APP_CLIENT_ID: skwIPnbi7N3uIvNysUbi0xfXwnWaIMR1MCJxz8rV0dGxeMJD    
   web:
     restart: always

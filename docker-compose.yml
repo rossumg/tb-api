@@ -1,30 +1,26 @@
 version: '3.3'
 services:
   client: 
+    env_file: ${SHARED_ENV_FILE}
     restart: always
     ports:
-      - "3060:3000"
+      - "${TB_MOBILE_EXTERNAL_PORT}:3000"
     build:
-      context: https://github.com/uwcirg/tb-mobile-app.git#feature/docker-compose-cpro
-    # volumes:
-    #   - ".:/usr/src/app"
+      context: ${TB_MOBILE_CONTEXT}
     stdin_open: true
     tty: true
     container_name: tb-mobile-app  
     command: yarn start
     environment:
       NODE_ENV: development
-      REACT_APP_API_PATH: https://tb-api.cirg.washington.edu
-      REACT_APP_REDIRECT_PATH: https://tb-mobile.cirg.washington.edu/redirect
-      REACT_APP_CHECKIN_PATH: https://mpower-api.cirg.washington.edu/surveys  
-      REACT_APP_CLIENT_ID: skwIPnbi7N3uIvNysUbi0xfXwnWaIMR1MCJxz8rV0dGxeMJD    
   web:
+    env_file: ${SHARED_ENV_FILE}
     restart: always
     build:
       context: ./webapp
       dockerfile: Dockerfile
     ports:
-      - target: 5000
+      - target: ${TB_API_INTERNAL_PORT}
     volumes:
       - "web:/usr/src/app"
     links:
@@ -32,8 +28,7 @@ services:
       - tbapp-db
     container_name: tb-api
     stdin_open: true
-    #command: /usr/local/bin/gunicorn -w 2 -b :8000 project:app
-    command: /usr/local/bin/gunicorn -w 2 -b :5000 tbapi_app:app
+    command: /usr/local/bin/gunicorn -w 2 -b :${TB_API_INTERNAL_PORT} tbapi_app:app
     
     tty: true
     depends_on:
@@ -51,10 +46,11 @@ services:
       - tbapi
 
   nginx:
+    env_file: ${SHARED_ENV_FILE}
     restart: always
     build: ./nginx
     ports:
-      - "5060:80"
+      - "${TB_API_EXTERNAL_PORT}:80"
     volumes:
       - web:/www/static
     depends_on:
@@ -62,6 +58,7 @@ services:
     networks:
       - tbapi
   mpower-db:
+    env_file: ${SHARED_ENV_FILE}
     restart: always
     image: mysql:5.7
     hostname: mpower-db
@@ -70,18 +67,17 @@ services:
       - type: volume
         source: mpower-db-volume
         target: /var/lib/mysql
-    # ports:
-    #   - "3306:3306"
     container_name: mpower-db
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: mpower_demo
-      MYSQL_USER: mpower
-      MYSQL_PASSWORD: mpower
+      MYSQL_DATABASE: $CPRO_DATABASE_NAME
+      MYSQL_USER: $CPRO_DATABASE_USER
+      MYSQL_PASSWORD: $CPRO_DATABASE_PASSWORD
     networks:
       - tbapi
 
   tbapp-db:
+    env_file: ${SHARED_ENV_FILE}
     restart: always
     image: mysql:5.7
     hostname: tbapp-db
@@ -95,9 +91,9 @@ services:
     container_name: tbapp-db
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: tbapi
-      MYSQL_USER: tbapi
-      MYSQL_PASSWORD: tbapi
+      MYSQL_DATABASE: $TB_DATABASE_NAME
+      MYSQL_USER: $TB_DATABASE_USER
+      MYSQL_PASSWORD: $TB_DATABASE_PASSWORD
     networks:
       - tbapi
 

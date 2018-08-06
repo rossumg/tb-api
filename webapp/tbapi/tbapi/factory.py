@@ -4,14 +4,15 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from .models import db
 from flask_sqlalchemy import SQLAlchemy
+import logging
+
 migrate = Migrate()
 
 
-def create_app(config=None):
+def create_app(dev=False):
     app = Flask('tbapi')
 
     app.config.update(dict(
-        Debug=True,
         SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://tbapi:tbapi@tbapp-db:3306/tbapi',
         SQLALCHEMY_TRACK_MODIFICATIONS = False,
         SQLALCHEMY_POOL_RECYCLE = 60,
@@ -19,6 +20,11 @@ def create_app(config=None):
             'mpower':        'mysql+pymysql://mpower:mpower@mpower-db:3306/mpower_demo',
         }
     ))
+
+    if dev:
+        app.config['DEBUG'] = True
+    else:
+        logger = logging.getLogger(__name__)
 
     CORS(app)
 

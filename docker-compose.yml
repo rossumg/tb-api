@@ -15,7 +15,7 @@ services:
       NODE_ENV: development
   web:
     env_file: ${SHARED_ENV_FILE}
-    restart: always
+    restart: "no"
     build:
       context: ./webapp
       dockerfile: Dockerfile
@@ -28,16 +28,18 @@ services:
       - tbapp-db
     container_name: tb-api
     stdin_open: true
-    command: /usr/local/bin/gunicorn -w 2 -b :${TB_API_INTERNAL_PORT} tbapi_app:app
-    
+    # command: /wait && echo $TB_API_INTERNAL_PORT 
+    # command: echo ${TB_API_INTERNAL_PORT} && /usr/local/bin/gunicorn -w 2 -b :${TB_API_INTERNAL_PORT} tbapi_app:app
+    command: /usr/local/bin/gunicorn --config /gunicorn.conf --log-config /logging.conf --log-file=- -b :5000 tbapi_app:app
+
     tty: true
     depends_on:
       - mpower-db
       - tbapp-db
     environment:
-      WAIT_HOSTS: mpower-db:3306, tbapp-db:3306
-      WAIT_BEFORE_HOSTS: 10
-      #FLASK_APP: "tbapi.factory:create_app()"
+      GUNICORN_ACCESSLOG: '-'
+      GUNICORN_LOG_FILE: '-'
+      GUNICORN_LOG_LEVEL: debug
       FLASK_APP: "tbapi_app.py"
       FLASK_DEBUG: 1
       AUTHLIB_INSECURE_TRANSPORT: 'true'

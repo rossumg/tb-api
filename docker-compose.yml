@@ -21,6 +21,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - target: ${TB_API_INTERNAL_PORT}
+        published: 5061
+        
     volumes:
       - "web:/usr/src/app"
     links:
@@ -30,7 +32,7 @@ services:
     stdin_open: true
     # command: /wait && echo $TB_API_INTERNAL_PORT 
     # command: echo ${TB_API_INTERNAL_PORT} && /usr/local/bin/gunicorn -w 2 -b :${TB_API_INTERNAL_PORT} tbapi_app:app
-    command: /wait && /usr/local/bin/gunicorn --config /gunicorn.conf --log-config /logging.conf --log-file=- -b :5000 tbapi_app:app
+    command: /usr/local/bin/gunicorn --config /gunicorn.conf --log-config /logging.conf --log-file=- -b :5000 tbapi_app:app
 
     tty: true
     depends_on:

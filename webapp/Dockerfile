@@ -23,6 +23,8 @@ RUN chmod +x /wait
 
 USER flask
 
+RUN /wait
+
 
 # CMD /wait && python -m flask run --host=0.0.0.0
 

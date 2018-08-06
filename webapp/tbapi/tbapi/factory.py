@@ -25,6 +25,8 @@ def create_app(dev=False):
         app.config['DEBUG'] = True
     else:
         logger = logging.getLogger(__name__)
+        app.logger.addHandler(logging.StreamHandler())
+        app.logger.setLevel(logging.DEBUG)  
 
     CORS(app)
 
